@@ -152,16 +152,181 @@ class ParkingLot {
 private:
 	int parkID;
 	char size;
-	std::vector<vehicle> ds_vehicle;
-	std::vector<bool> ds_occupied;
+	vehicle vehicle1, vehicle2, vehicle3;
+	bool hasVehicle1, hasVehicle2, hasVehicle3;
 public:
 	ParkingLot() {
 		parkID = 0;
 		size = ' ';
-		ds_vehicle = std::vector<vehicle>(0);
-		ds_occupied = std::vector<bool>(0);
+		hasVehicle1 = false;
+		hasVehicle2 = false;
+		hasVehicle3 = false;
 	}
-	ParkingLot(int id , char s)
+	ParkingLot(int id, char s) {
+		parkID = id;
+		size = s;
+		if (size == 'S') {
+			hasVehicle1 = false;
+			hasVehicle2 = true;
+			hasVehicle3 = true;
+		}
+		else if (size == 'M') {
+			hasVehicle1 = false;
+			hasVehicle2 = false;
+			hasVehicle3 = true;
+		}
+		else if (size == 'L') {
+			hasVehicle1 = false;
+			hasVehicle2 = false;
+			hasVehicle3 = false;
+		}
+		else {
+			std::cout << "ko hop le" << std::endl;
+		}
+	}
+
+	int getParkID() {
+		return parkID;
+	}
+
+	bool addVehicle(const vehicle& v) {
+		if (size == 'S') {
+			if (!hasVehicle1) {
+				vehicle1 = v;
+				hasVehicle1 = true;
+			}
+			return hasVehicle1;
+		}
+
+		if (size == 'M') {
+			if (!hasVehicle1) {
+				vehicle1 = v;
+				hasVehicle1 = true;
+				return true;
+			}
+			else if (!hasVehicle2) {
+				vehicle2 = v;
+				hasVehicle2 = true;
+				return true;
+			}
+			return false;
+		}
+
+		if (size == 'L') {
+			if (!hasVehicle1) {
+				vehicle1 = v;
+				hasVehicle1 = true;
+				return true;
+			}
+			else if (!hasVehicle2) {
+				vehicle2 = v;
+				hasVehicle2 = true;
+				return true;
+			}
+			else if (!hasVehicle3) {
+				vehicle3 = v;
+				hasVehicle3 = true;
+				return true;
+			}
+			return false;
+		}
+	}
+
+	bool removeVehicle(int id) {
+		if (vehicle1.getVehicleID() == id) {
+			hasVehicle1 = false;
+			return true;
+		}
+		if (vehicle2.getVehicleID() == id) {
+			hasVehicle2 = false;
+			return true;
+		}
+		if (vehicle3.getVehicleID() == id) {
+			hasVehicle3 = false;
+			return true;
+		}
+		return false;
+	}
+
+	void displayLotInfo() {
+		std::cout << "ParkID : " << parkID << std::endl;
+		std::cout << "Size : " << size << std::endl;
+		if (hasVehicle1) {
+			std::cout << "Vehicle1 con trong bai xe" << std::endl;
+		}
+		if (hasVehicle2) {
+			std::cout << "Vehicle2 con trong bai xe" << std::endl;
+		}
+		if (hasVehicle3) {
+			std::cout << "Vehicle3 con trong bai xe" << std::endl;
+		}
+	}
+
+};
+
+class SystemInterface {
+private:
+	ParkingLot parkingLot1, parkingLot2, parkingLot3;
+	bool hasLot1, hasLot2, hasLot3;
+	int soluongbai = 0;
+public:
+	SystemInterface() {
+		hasLot1 = false;
+		hasLot2 = false;
+		hasLot3 = false;
+	}
+
+	void runMenu() {
+		int a;
+		do {
+			std::cin >> a;
+
+			switch (a) {
+			case 1: {
+				if (soluongbai >= 3) {
+					std::cout << "het slot" << std::endl;
+					break;
+				}
+				std::cout << "ID : ";
+				int id;
+				std::cin >> id;
+				if (id == parkingLot1.getParkID() || id == parkingLot2.getParkID() || id == parkingLot3.getParkID()) {
+					std::cout << "ID da ton tai" << std::endl;
+					break;
+				}
+				std::cin.ignore();
+				std::cout << "Size : ";
+				char size;
+				std::cin >> size;
+				ParkingLot parkTemp(id, size);
+				if (!hasLot1) {
+					parkingLot1 = parkTemp;
+					hasLot1 = true;
+					soluongbai++;
+					break;
+				}
+				if (!hasLot2) {
+					parkingLot2 = parkTemp;
+					hasLot2 = true;
+					soluongbai++;
+					break;
+				}
+				if (!hasLot3) {
+					parkingLot3 = parkTemp;
+					hasLot3 = true;
+					soluongbai++;
+					break;
+				}
+
+				break;
+			}
+			case 2:
+				break;
+			
+			}
+
+		} while (a != 9);
+	}
 };
 
 
