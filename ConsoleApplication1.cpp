@@ -4,6 +4,7 @@
 #include<vector>
 #include<iomanip>
 #include<cctype>
+#include<string>
 
 /*public:
 Xe();
@@ -145,6 +146,14 @@ public:
 		return parkingFee;
 	}
 
+	void hienthi() {
+		std::cout << "ID :" << vehicleID << std::endl;
+		std::cout << "Type : " << vehicleType << std::endl;
+		std::cout << "EntryTime : " << entryTime << std::endl;
+		std::cout << "ParkingDuration : " << parkingDuration << std::endl;
+		std::cout << "Fee : " << caculateFee() << std::endl;
+	}
+
 
 };
 
@@ -155,6 +164,7 @@ private:
 	vehicle vehicle1, vehicle2, vehicle3;
 	bool hasVehicle1, hasVehicle2, hasVehicle3;
 public:
+	std::vector<vehicle> vehicleParkingLot = { vehicle1 , vehicle2 , vehicle3 };
 	ParkingLot() {
 		parkID = 0;
 		size = ' ';
@@ -277,6 +287,8 @@ public:
 	}
 
 	void runMenu() {
+		std::vector<ParkingLot> parkinglot1 = { parkingLot1 , parkingLot2 , parkingLot3 };
+		
 		int a;
 		do {
 			std::cin >> a;
@@ -320,10 +332,102 @@ public:
 
 				break;
 			}
-			case 2:
+			case 2: {
+				int vehicleID1;
+				std::cout << "vehicleID : " << std::endl;
+				std::cin >> vehicleID1;
+				std::cin.ignore();
+				std::cout << "vehicleType : " << std::endl;
+				std::string vehicleType1;
+				getline(std::cin, vehicleType1);
+				std::cout << "entryTime : " << std::endl;
+				int entryTime1;
+				std::cin >> entryTime1;
+				std::cout << "parkingDuration : " << std::endl;
+				int parkingDuration1;
+				std::cin >> parkingDuration1;
+
+				vehicle a(vehicleID1, vehicleType1, entryTime1, parkingDuration1);
+				for (ParkingLot temp : parkinglot1) {
+					temp.addVehicle(a);
+					if (temp.addVehicle(a) == true) {
+						std::cout << "Thêm xe thành công" << std::endl;
+						break;
+					}
+				}
+
 				break;
-			
 			}
+
+			case 3: {
+				int parkID1;
+				std::cout << "ParkID : " << std::endl;
+				std::cin >> parkID1;
+				ParkingLot tempparkinglot;
+				for (ParkingLot temp : parkinglot1) {
+					if (temp.getParkID() == parkID1) {
+						temp = tempparkinglot;
+						break;
+					}
+				
+				}
+				std::cout << "ko tìm thấy park" << std::endl;
+				break;
+			}
+
+			case 4: {
+				int vehicleID1;
+				std::cout << "Nhập ID: " << std::endl;
+				std::cin >> vehicleID1;
+				for (ParkingLot temp : parkinglot1) {
+					for (vehicle tempVehicle : temp.vehicleParkingLot) {
+						if (tempVehicle.getVehicleID() == vehicleID1) {
+							temp.removeVehicle(tempVehicle.getVehicleID());
+							if (temp.removeVehicle(tempVehicle.getVehicleID()) == true) {
+								std::cout << "Remove thành công" << std::endl;
+							}
+							else {
+								std::cout << "ko remove dc" << std::endl;
+							}
+						}
+					}
+				}
+
+				break;
+			}
+
+			case 5: {
+				for (ParkingLot temp : parkinglot1) {
+					temp.displayLotInfo();
+				}
+
+				break;
+			}
+
+			case 6: {
+				int parkID1;
+				std::cout << "Nhập parkID : " << std::endl;
+				std::cin >> parkID1;
+				for (ParkingLot temp : parkinglot1) {
+					if (temp.getParkID() == parkID1) {
+						for (vehicle tempvehicle : temp.vehicleParkingLot) {
+							tempvehicle.hienthi();
+							break;
+						}
+					}
+				}
+				std::cout << "ko thấy xe" << std::endl;
+				break;
+			}
+			
+
+			case 7: {
+
+				break;
+			}
+
+			
+
 
 		} while (a != 9);
 	}
