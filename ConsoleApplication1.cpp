@@ -55,13 +55,15 @@ public:
 	vehicle(int id, std::string type, int entry, int duration) {
 		vehicleID = id;
 		if (tolowerstring(type) == "car" || tolowerstring(type) == "motorcycle" || tolowerstring(type) == "bicycle") {
-			vehicleType = type;
+			vehicleType = tolowerstring(type);
 		}
 		else {
 			std::cout << "type ko hop le" << std::endl;
 		}
 		entryTime = entry;
 		parkingDuration = duration;
+		parkingFee = 0.0;
+		isOccupied = false;
 	}
 	void setVehicleID(int id) {
 		vehicleID = id;
@@ -71,7 +73,7 @@ public:
 	}
 	void setVehicleType(std::string type) {
 		if(tolowerstring(type) == "car" || tolowerstring(type) == "motorcycle" || tolowerstring(type) == "bicycle") {
-			vehicleType = type;
+			vehicleType = tolowerstring(type);
 			return;
 		}
 		else {
@@ -119,6 +121,7 @@ public:
 	}
 	double caculateFee() {
 		double fee = 0.0;
+		double totalfee = 0;
 		if (tolowerstring(vehicleType) == "car") {
 			fee = 6.00;
 		}
@@ -133,17 +136,17 @@ public:
 		for (int i = 0; i <= calTime; ++i) {
 			if (entryTime == 6 || entryTime == 7 || entryTime == 8 || entryTime == 9
 				|| entryTime == 15 || entryTime == 16 || entryTime == 17 || entryTime == 18) {
-				parkingFee += fee * 130 / 100;
+				totalfee += fee * 130 / 100;
 			}
 			else {
-				parkingFee += fee * 95 / 100;
+				totalfee += fee * 95 / 100;
 			}
 		}
 
 		for (int i = 3; i <= entryTime + parkingDuration; ++i) {
-			parkingFee += fee * 90 / 100;
+			totalfee += fee * 90 / 100;
 		}
-		return parkingFee;
+		return totalfee;
 	}
 
 	void hienthi() {
@@ -288,7 +291,7 @@ public:
 
 	void runMenu() {
 		std::vector<ParkingLot> parkinglot1 = { parkingLot1 , parkingLot2 , parkingLot3 };
-		
+
 		int a;
 		do {
 			std::cin >> a;
@@ -369,7 +372,7 @@ public:
 						temp = tempparkinglot;
 						break;
 					}
-				
+
 				}
 				std::cout << "ko tìm thấy park" << std::endl;
 				break;
@@ -419,19 +422,65 @@ public:
 				std::cout << "ko thấy xe" << std::endl;
 				break;
 			}
-			
+
 
 			case 7: {
+				std::string vehicleType1;
+				getline(std::cin, vehicleType1);
+				vehicleType1 = tolowerstring(vehicleType1);
+				for (ParkingLot temp : parkinglot1) {
+					for (vehicle tempvehicle : temp.vehicleParkingLot) {
+						if (tempvehicle.getVehicleType() == vehicleType1) {
+							temp.displayLotInfo();
+							tempvehicle.hienthi();
+						}
+					}
+				}
 
 				break;
 			}
 
-			
+			case 8: {
+				int dem = 0;
+				double tongtien = 0;
+				std::cout << "Motorcycle : " << std::endl;
+				for (ParkingLot temp : parkinglot1) {
+					for (vehicle tempvehicle : temp.vehicleParkingLot) {
+						if (tempvehicle.getVehicleType() == "motorcycle") {
+							tongtien += tempvehicle.caculateFee();
+							dem += 1;
+						}
+					}
+				}
+				std::cout << tongtien << std::endl;
+				dem = 0; tongtien = 0;
+				std::cout << "Car : " << std::endl;
+				for (ParkingLot temp : parkinglot1) {
+					for (vehicle tempvehicle : temp.vehicleParkingLot) {
+						if (tempvehicle.getVehicleType() == "car") {
+							tongtien += tempvehicle.caculateFee();
+							dem += 1;
+						}
+					}
+				}
+				std::cout << tongtien << std::endl;
+				dem = 0; tongtien = 0;
+				std::cout << "Bicycle : " << std::endl;
+				for (ParkingLot temp : parkinglot1) {
+					for (vehicle tempvehicle : temp.vehicleParkingLot) {
+						if (tempvehicle.getVehicleType() == "bicycle") {
+							tongtien += tempvehicle.caculateFee();
+							dem += 1;
+						}
+					}
+				}
+				std::cout << tongtien << std::endl;
 
+			}
 
-		} while (a != 9);
-	}
-};
+			} while (a != 9);
+		}
+	};
 
 
 
